@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Http\Responses\JsonApiResponse;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
@@ -87,6 +89,19 @@ class Handler extends ExceptionHandler
 //        }
 
         return $exception;
+    }
+
+    protected function prepareJsonResponse($request, Exception $e)
+    {
+        /** @var JsonResponse $jsonResponse */
+        $jsonResponse = parent::prepareJsonResponse($request, $e);
+
+        return new JsonApiResponse(
+            $jsonResponse->getContent(),
+            $jsonResponse->getStatusCode(),
+            $jsonResponse->headers->all()
+        );
+
     }
 
 

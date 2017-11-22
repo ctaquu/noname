@@ -17,16 +17,24 @@ use ReflectionClass;
 
 class JsonApiResponse extends Response
 {
-    public function __construct($model, $status = Response::HTTP_OK, array $headers = array())
+    public function __construct($data, $status = Response::HTTP_OK, array $headers = array())
     {
-        $modelClass = (new ReflectionClass($model))->getName();
+        $content = $data;
 
-        // format to JsonAPI format
-        $encoder = Encoder::instance([
-            $modelClass => SchemaMap::getForModel($modelClass),
-        ], new EncoderOptions(JSON_PRETTY_PRINT, env('APP_URL') . '/api/v1'));
+        // format models to JsonApi format
+        if ($data instanceof \Eloquent) {
 
-        parent::__construct($encoder->encodeData($model), $status, ['Content-Type' => 'application/vnd.api+json']);
+            $modelClass = (new ReflectionClass($data))->getName();
+
+            // format to JsonAPI format
+            $encoder = Encoder::instance([
+                $modelClass => SchemaMap::getForModel($modelClass),
+            ], new EncoderOptions(JSON_PRETTY_PRINT, env('APP_URL') . '/api/v1'));
+
+            $content = $encoder->encodeData($data);
+        }
+
+        parent::__construct($content, $status, ['Content-Type' => 'application/vnd.api+json']);
     }
 
 }
