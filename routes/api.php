@@ -20,7 +20,12 @@ Route::prefix('v1')->group(function () {
 //    });
 
     Route::resource('users', 'Api\v1\UserController', ['only' => [
-        'store', 'show', 'update',
+        'show',
+        'store',
     ]]);
+
+    Route::resource('users', 'Api\v1\UserController', ['only' => [
+        'update',
+    ]])->middleware('auth:api');
 
 });

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Responses\JsonApiResponse;
 use App\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -39,7 +40,7 @@ class UserController extends Controller
             'password' => bcrypt($attributes['password']),
         ]);
 
-        return new JsonApiResponse($user);
+        return new JsonApiResponse($user, Response::HTTP_CREATED);
     }
 
     /**

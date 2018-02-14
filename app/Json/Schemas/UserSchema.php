@@ -9,17 +9,11 @@
 namespace App\Json\Schemas;
 
 
-use Neomerx\JsonApi\Schema\SchemaProvider;
+use App\Json\Schemes\BaseSchema;
 
-class UserSchema extends SchemaProvider
+class UserSchema extends BaseSchema
 {
     protected $resourceType = 'users';
-
-    public function getId($model)
-    {
-        /** @var $model */
-        return $model->id;
-    }
 
     public function getAttributes($model)
     {

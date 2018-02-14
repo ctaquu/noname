@@ -2,6 +2,7 @@
 
 namespace App\Http\Responses;
 
+use Facades\App\Http\Helper;
 use App\Json\SchemaMap;
 use Illuminate\Http\Response;
 use Neomerx\JsonApi\Encoder\Encoder;
@@ -34,7 +35,15 @@ class JsonApiResponse extends Response
             $content = $encoder->encodeData($data);
         }
 
-        parent::__construct($content, $status, ['Content-Type' => 'application/vnd.api+json']);
+
+        // check if the content is already formatted
+        if (!Helper::isJson($data)) {
+            $content = Helper::toJson($data);
+        }
+
+        parent::__construct($content, $status);
+
+        $this->header('Content-Type', 'application/vnd.api+json');
     }
 
 }

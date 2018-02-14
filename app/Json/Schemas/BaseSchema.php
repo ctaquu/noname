@@ -9,9 +9,13 @@
 namespace App\Json\Schemes;
 
 
-use Illuminate\Database\Eloquent\Model;
+use Neomerx\JsonApi\Schema\SchemaProvider;
 
-abstract class BaseSchema
+abstract class BaseSchema extends SchemaProvider
 {
-
+    public function getId($model)
+    {
+        /** @var $model */
+        return $model->id;
+    }
 }
