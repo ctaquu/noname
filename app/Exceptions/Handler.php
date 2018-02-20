@@ -6,6 +6,7 @@ use App\Http\Responses\JsonApiResponse;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
@@ -109,8 +110,12 @@ class Handler extends ExceptionHandler
     {
         // add detail for JsonApi format
         $exceptionAsArray = [
-            'title' => (new \ReflectionClass($e))->getShortName(),
-            'detail' => $this->isHttpException($e) ? $e->getMessage() : 'Server Error',
+            'errors' => [
+                [
+                    'title' => (new \ReflectionClass($e))->getShortName(),
+                    'detail' => $this->isHttpException($e) ? $e->getMessage() : 'Server Error',
+                ],
+            ],
         ];
 
         return config('app.debug') ?
